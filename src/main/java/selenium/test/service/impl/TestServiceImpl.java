@@ -8,6 +8,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Service;
 import selenium.test.service.TestService;
+import selenium.test.vo.ChromeFlow;
+import selenium.test.vo.Response;
 
 /**
  * Created on 2019/1/3
@@ -20,7 +22,7 @@ import selenium.test.service.TestService;
 public class TestServiceImpl implements TestService {
 
     @Override
-    public String chromeTest() throws Exception {
+    public Response<ChromeFlow> chromeTest() throws Exception {
         ChromeDriverManager.getInstance().setup();
         WebDriver driver ;
         try{
@@ -30,31 +32,42 @@ public class TestServiceImpl implements TestService {
         } catch (Exception ex){
             System.out.println("Exception while instantiating driver. " + ex.getMessage());
         }
-        return "drive not get";
+        return new Response(-1, "Driver error");
     }
 
-    private String script(WebDriver driver) throws Exception{
+    private Response<ChromeFlow> script(WebDriver driver) throws Exception{
+        ChromeFlow chromeFlow = new ChromeFlow();
         if(driver != null) {
-            driver.get("http://localhost:8080/login");
-            WebElement element = driver.findElement(By.name("username1"));
-            element.sendKeys("admin");
+            try {
+                driver.get("http://localhost:8080/login");
+                WebElement element = driver.findElement(By.name("username1"));
+                element.sendKeys("admin");
 
-            element = driver.findElement(By.name("password1"));
-            element.sendKeys("12345");
+                element = driver.findElement(By.name("password1"));
+                element.sendKeys("12345");
 
-            element = ((RemoteWebDriver) driver).findElementById("testBtn");
-            element.click();
-            if(driver.getCurrentUrl().equals("http://localhost:8080/com/helloJsp")){
-                System.out.println("success");
-            } else{
-                System.out.println("error");
+                chromeFlow.setEnterData(true);
+
+                element = ((RemoteWebDriver) driver).findElementById("testBtn");
+                element.click();
+                chromeFlow.setLogin(true);
+
+                if (driver.getCurrentUrl().equals("http://localhost:8080/com/helloJsp")) {
+                    chromeFlow.setChkFormInfo(true);
+                }
+                element = ((RemoteWebDriver) driver).findElementByClassName("container-fluid");
+                chromeFlow.setChkData(element.getText());
+
+                Thread.sleep(2000);
+                driver.quit();
+                return new Response(0, "success", chromeFlow);
+            }catch (Exception e){
+                e.printStackTrace();
+                return new Response(99, "Exception :"+e.getMessage());
             }
-            element = ((RemoteWebDriver) driver).findElementByClassName("container-fluid");
-            System.out.println("Title: " + element.getText());
-
-            Thread.sleep(5000);
-            driver.quit();
+        }else {
+            return new Response(-2, "Driver is null");
         }
-        return "success";
+
     }
 }

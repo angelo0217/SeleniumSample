@@ -1,5 +1,8 @@
 package selenium.test.service;
 
+import selenium.test.vo.ChromeFlow;
+import selenium.test.vo.Response;
+
 /**
  * Created on 2019/1/3
  *
@@ -8,5 +11,5 @@ package selenium.test.service;
  * @since 1.0
  */
 public interface TestService {
-    public String chromeTest() throws Exception;
+    public Response<ChromeFlow> chromeTest() throws Exception;
 }
