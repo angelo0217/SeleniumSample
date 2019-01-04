@@ -27,11 +27,13 @@ public class BasicScript {
 
         if (driver != null) {
             try {
+                //要登入才能做事，無可避免
                 if (doLogin(driver, request.getServerIp())) {
                     stepStatusVo.setDoLogin(true);
 
                     String[] acts = request.getRange().split(",");
 
+                    //判斷步驟，執行需要跑的測試
                     for (String act : acts) {
                         if (act.trim().equals("chk")) {
                             stepStatusVo.setChkField(doChkHidden(driver));
