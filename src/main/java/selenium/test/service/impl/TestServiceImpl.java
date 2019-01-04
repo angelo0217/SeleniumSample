@@ -78,7 +78,7 @@ public class TestServiceImpl implements TestService {
 //                element.click();
                 //麻煩的IE 要改這樣 Cheome 可用
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click();",element);
-                testFlow.setLogin(true);
+
 
                 int cnt = 0;
                 //登入緩衝
@@ -88,10 +88,13 @@ public class TestServiceImpl implements TestService {
                 }
 
                 if (driver.getCurrentUrl().equals("http://"+serverIp+":8080/com/helloJsp")) {
-                    testFlow.setChkFormInfo(true);
+                    testFlow.setLogin(true);
                 }
 //                element = ((RemoteWebDriver) driver).findElementByClassName("container-fluid");
                 element = ((RemoteWebDriver) driver).findElementById("helloText");
+                if(element.getText().equals("helloJsp")){
+                    testFlow.setChkFormInfo(true);
+                }
                 testFlow.setChkData(element.getText());
 
                 Thread.sleep(2000);

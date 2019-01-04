@@ -16,7 +16,7 @@ public class TestFlow {
     private boolean login = false;
     @JsonProperty("chk_form_info")
     private boolean chkFormInfo = false;
-    @JsonProperty("get_class_data")
+    @JsonProperty("get_chk_data")
     private String chkData = "";
 
     public boolean isEnterData() {
