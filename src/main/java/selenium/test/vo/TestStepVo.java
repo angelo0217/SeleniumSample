@@ -9,16 +9,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @email loveangelo0217@gmail.com
  * @since 1.0
  */
-public class StepStatusVo {
+public class TestStepVo {
     private String acts;
 
-    private boolean doLogin = false;
+    private String doLogin = "N";
 
-    private boolean chkField = false;
+    private String chkField = "N";
 
-    private boolean doInsert = false;
+    private String doInsert = "N";
 
-    private boolean doQuery = false;
+    private String doQuery = "N";
 
     private String exceptionStr = "";
 
@@ -30,35 +30,35 @@ public class StepStatusVo {
         this.acts = acts;
     }
 
-    public boolean isDoLogin() {
+    public String getDoLogin() {
         return doLogin;
     }
 
-    public void setDoLogin(boolean doLogin) {
+    public void setDoLogin(String doLogin) {
         this.doLogin = doLogin;
     }
 
-    public boolean isChkField() {
+    public String getChkField() {
         return chkField;
     }
 
-    public void setChkField(boolean chkField) {
+    public void setChkField(String chkField) {
         this.chkField = chkField;
     }
 
-    public boolean isDoInsert() {
+    public String getDoInsert() {
         return doInsert;
     }
 
-    public void setDoInsert(boolean doInsert) {
+    public void setDoInsert(String doInsert) {
         this.doInsert = doInsert;
     }
 
-    public boolean isDoQuery() {
+    public String getDoQuery() {
         return doQuery;
     }
 
-    public void setDoQuery(boolean doQuery) {
+    public void setDoQuery(String doQuery) {
         this.doQuery = doQuery;
     }
 

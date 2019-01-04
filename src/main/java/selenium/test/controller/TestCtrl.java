@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import selenium.test.service.TestService;
 import selenium.test.vo.Request;
 import selenium.test.vo.Response;
-import selenium.test.vo.StepStatusVo;
+import selenium.test.vo.TestStepVo;
 
 /**
  * Created on 2019/1/2
@@ -23,11 +23,11 @@ public class TestCtrl {
     TestService testService;
 
     @PostMapping("testChrome")
-    public Response<StepStatusVo> testChrome(@RequestBody Request request) throws Exception{
+    public Response<TestStepVo> testChrome(@RequestBody Request request) throws Exception{
         return testService.chromeTest(request);
     }
     @PostMapping("testIE")
-    public Response<StepStatusVo> testIe(@RequestBody Request request) throws Exception{
+    public Response<TestStepVo> testIe(@RequestBody Request request) throws Exception{
         return testService.ieTest(request);
     }
     @PostMapping("testError")

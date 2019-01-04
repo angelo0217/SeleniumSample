@@ -9,7 +9,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Component;
 import selenium.test.vo.Request;
 import selenium.test.vo.Response;
-import selenium.test.vo.StepStatusVo;
+import selenium.test.vo.TestStepVo;
 
 /**
  * Created on 2019/1/4
@@ -21,31 +21,34 @@ import selenium.test.vo.StepStatusVo;
 @Component
 public class BasicScript {
 
-    public Response<StepStatusVo> script(WebDriver driver, Request request) throws Exception {
-        StepStatusVo stepStatusVo = new StepStatusVo();
-        stepStatusVo.setActs(request.getRange());
+    public Response<TestStepVo> script(WebDriver driver, Request request) throws Exception {
+        TestStepVo testStepVo = new TestStepVo();
+        testStepVo.setActs(request.getRange());
 
         if (driver != null) {
             try {
                 //要登入才能做事，無可避免
                 if (doLogin(driver, request.getServerIp())) {
-                    stepStatusVo.setDoLogin(true);
+                    testStepVo.setDoLogin("true");
 
                     String[] acts = request.getRange().split(",");
 
                     //判斷步驟，執行需要跑的測試
                     for (String act : acts) {
                         if (act.trim().equals("chk")) {
-                            stepStatusVo.setChkField(doChkHidden(driver));
+                            testStepVo.setChkField(doChkHidden(driver) + "");
                         } else if (act.trim().equals("insert")) {
-                            stepStatusVo.setDoInsert(doInsert(driver, request));
+                            testStepVo.setDoInsert(doInsert(driver, request)+ "");
                         } else if (act.trim().equals("query")) {
-                            stepStatusVo.setDoQuery(doQuery(driver));
+                            testStepVo.setDoQuery(doQuery(driver)+ "");
                         }
                     }
+                    Thread.sleep(3000);
+                }else{
+                    testStepVo.setDoLogin("false");
                 }
 
-                return new Response(0, "success" , stepStatusVo);
+                return new Response(0, "success" , testStepVo);
             } catch (Exception e) {
                 e.printStackTrace();
                 return new Response(99, "Exception :" + e.getMessage());

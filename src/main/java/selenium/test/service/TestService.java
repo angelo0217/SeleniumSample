@@ -1,7 +1,7 @@
 package selenium.test.service;
 
 import selenium.test.vo.Request;
-import selenium.test.vo.StepStatusVo;
+import selenium.test.vo.TestStepVo;
 import selenium.test.vo.Response;
 
 /**
@@ -12,7 +12,7 @@ import selenium.test.vo.Response;
  * @since 1.0
  */
 public interface TestService {
-    public Response<StepStatusVo> chromeTest(Request request) throws Exception;
+    public Response<TestStepVo> chromeTest(Request request) throws Exception;
 
-    public Response<StepStatusVo> ieTest(Request request) throws Exception;
+    public Response<TestStepVo> ieTest(Request request) throws Exception;
 }
