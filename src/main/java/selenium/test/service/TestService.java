@@ -1,6 +1,6 @@
 package selenium.test.service;
 
-import selenium.test.vo.ChromeFlow;
+import selenium.test.vo.TestFlow;
 import selenium.test.vo.Response;
 
 /**
@@ -11,5 +11,7 @@ import selenium.test.vo.Response;
  * @since 1.0
  */
 public interface TestService {
-    public Response<ChromeFlow> chromeTest() throws Exception;
+    public Response<TestFlow> chromeTest() throws Exception;
+
+    public Response<TestFlow> ieTest() throws Exception;
 }

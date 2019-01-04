@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @email loveangelo0217@gmail.com
  * @since 1.0
  */
-public class ChromeFlow {
+public class TestFlow {
     @JsonProperty("enter_act_pwd")
     private boolean enterData = false;
     @JsonProperty("do_login")

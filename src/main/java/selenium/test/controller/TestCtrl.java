@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import selenium.test.service.TestService;
-import selenium.test.vo.ChromeFlow;
+import selenium.test.vo.TestFlow;
 import selenium.test.vo.Response;
 
 /**
@@ -21,8 +21,12 @@ public class TestCtrl {
     TestService testService;
 
     @GetMapping("testChrome")
-    public Response<ChromeFlow> testChrome() throws Exception{
+    public Response<TestFlow> testChrome() throws Exception{
         return testService.chromeTest();
+    }
+    @GetMapping("testIE")
+    public Response<TestFlow> testIe() throws Exception{
+        return testService.ieTest();
     }
     @GetMapping("testError")
     public Response testError() throws Exception{
