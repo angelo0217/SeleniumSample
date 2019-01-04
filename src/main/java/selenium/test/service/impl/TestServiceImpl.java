@@ -61,10 +61,11 @@ public class TestServiceImpl implements TestService {
     }
 
     private Response<TestFlow> script(WebDriver driver) throws Exception{
+        String serverIp = "192.168.43.127";
         TestFlow testFlow = new TestFlow();
         if(driver != null) {
             try {
-                driver.get("http://localhost:8080/login");
+                driver.get("http://"+serverIp+":8080/login");
                 WebElement element = driver.findElement(By.name("username1"));
                 element.sendKeys("admin");
 
@@ -81,12 +82,12 @@ public class TestServiceImpl implements TestService {
 
                 int cnt = 0;
                 //登入緩衝
-                while(cnt < 20 && driver.getCurrentUrl().equals("http://localhost:8080/login")){
+                while(cnt < 20 && driver.getCurrentUrl().equals("http://"+serverIp+":8080/login")){
                     Thread.sleep(1000);
                     cnt ++;
                 }
 
-                if (driver.getCurrentUrl().equals("http://localhost:8080/com/helloJsp")) {
+                if (driver.getCurrentUrl().equals("http://"+serverIp+":8080/com/helloJsp")) {
                     testFlow.setChkFormInfo(true);
                 }
 //                element = ((RemoteWebDriver) driver).findElementByClassName("container-fluid");
