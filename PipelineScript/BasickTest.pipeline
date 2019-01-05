@@ -1,0 +1,24 @@
+
+    def changeAlias() {
+    def command = """{
+        \"serverIp\" : \"${serverIp}\",
+        \"range\":\"${range}\",
+        \"name\":\"${name}\",
+        \"age\":${age}
+      }"""
+    echo(command)
+    response = httpRequest (consoleLogResponseBody: true,
+      contentType: 'APPLICATION_JSON',
+      httpMode: 'POST',
+      requestBody: command,
+      url: "http://192.168.0.105:8881/testIE",
+      validResponseCodes: '200',
+      validResponseContent: '"msg":"success"')
+   return response
+    }
+node {
+    stage('Say hello'){
+       cleanWs()
+       changeAlias()
+   }
+}

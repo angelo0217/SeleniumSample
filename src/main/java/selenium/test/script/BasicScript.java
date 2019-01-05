@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Component;
+import selenium.test.util.TimeDelayUtil;
 import selenium.test.vo.Request;
 import selenium.test.vo.Response;
 import selenium.test.vo.TestStepVo;
@@ -40,7 +41,7 @@ public class BasicScript {
                         } else if (act.trim().equals("insert")) {
                             testStepVo.setDoInsert(doInsert(driver, request)+ "");
                         } else if (act.trim().equals("query")) {
-                            testStepVo.setDoQuery(doQuery(driver)+ "");
+                            testStepVo.setDoQuery(doQuery(driver, request.getServerIp())+ "");
                         }
                     }
                     Thread.sleep(3000);
@@ -63,68 +64,57 @@ public class BasicScript {
 
     public boolean doLogin(WebDriver driver, String serverIp) throws Exception {
         driver.get("http://" + serverIp + ":8080/login");
-        WebElement element = driver.findElement(By.name("username1"));
+        WebElement element = driver.findElement(By.id("username1"));
         element.sendKeys("admin");
 
-        element = driver.findElement(By.name("password1"));
+        element = driver.findElement(By.id("password1"));
         element.sendKeys("12345");
 
         element = ((RemoteWebDriver) driver).findElementById("testBtn");
 
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
 
-
-        int cnt = 0;
-        //登入緩衝
-        while (cnt < 20 && driver.getCurrentUrl().equals("http://" + serverIp + ":8080/login")) {
-            Thread.sleep(1000);
-            cnt++;
-        }
-
-        if (driver.getCurrentUrl().equals("http://" + serverIp + ":8080/com/helloJsp")) {
-            return true;
-        }
-        return false;
+        return TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/helloJsp", 20);
     }
 
     public boolean doChkHidden(WebDriver driver) throws Exception {
         WebElement element = ((RemoteWebDriver) driver).findElementById("helloText");
-        if (element.getText().equals("helloJsp")) {
-            return true;
-        }
-        return false;
+        return TimeDelayUtil.chkText(element, "helloJsp", 5);
     }
 
     public boolean doInsert(WebDriver driver, Request request) throws Exception {
-        WebElement element = ((RemoteWebDriver) driver).findElementById("name");
-        element.sendKeys(request.getName());
+        driver.get("http://" + request.getServerIp() + ":8080/com/helloJsp");
+        if(TimeDelayUtil.chkUrl(driver, "http://" + request.getServerIp() + ":8080/com/helloJsp", 20)) {
 
-        element = ((RemoteWebDriver) driver).findElementById("age");
-        element.sendKeys(request.getAge() + "");
+            WebElement element = ((RemoteWebDriver) driver).findElementById("name");
+            element.sendKeys(request.getName());
 
-        element = ((RemoteWebDriver) driver).findElementById("insertBtn");
+            element = ((RemoteWebDriver) driver).findElementById("age");
+            element.sendKeys(request.getAge() + "");
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+//            WebElement elementBtn = ((RemoteWebDriver) driver).findElementById("insertBtn");
+            element = driver.findElement(By.id("insertBtn"));
+            ((JavascriptExecutor) driver).executeScript("return arguments[0].click();", element);
 
-        Thread.sleep(1000);
-        int cnt = 0;
-        //登入緩衝
-        while (cnt < 10 && !StringUtil.isBlank(element.getAttribute("value"))) {
-            Thread.sleep(1000);
-            cnt++;
-        }
-        if (StringUtil.isBlank(element.getAttribute("value"))) {
-            return true;
+            element = ((RemoteWebDriver) driver).findElementById("name");
+            return TimeDelayUtil.chkValue(element, "", 10, true);
         }
         return false;
     }
 
-    public boolean doQuery(WebDriver driver) throws Exception {
-        WebElement element = ((RemoteWebDriver) driver).findElementById("queryBtn");
+    public boolean doQuery(WebDriver driver, String serverIp) throws Exception {
+        driver.get("http://" + serverIp + ":8080/com/queryPage");
+        if(TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/queryPage", 10)){
+            WebElement element = ((RemoteWebDriver) driver).findElementById("queryBtn");
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+            ((JavascriptExecutor) driver).executeScript("return arguments[0].click();", element);
 
-        Thread.sleep(1000);
-        return true;
+            element = ((RemoteWebDriver) driver).findElementById("chkField");
+
+            return TimeDelayUtil.chkValue(element, "ok", 10, false);
+        }
+
+        return false;
     }
+
 }
