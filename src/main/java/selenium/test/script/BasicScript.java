@@ -45,11 +45,12 @@ public class BasicScript {
                         }
                     }
                     Thread.sleep(3000);
+                    return new Response(0, "success" , testStepVo);
                 }else{
-                    testStepVo.setDoLogin("false");
+                    return new Response(-1, "login fail" , testStepVo);
                 }
 
-                return new Response(0, "success" , testStepVo);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return new Response(99, "Exception :" + e.getMessage());

@@ -12,7 +12,7 @@
       httpMode: 'POST',
       connectionTimeout: 60,
       requestBody: command,
-      url: "http://192.168.0.105:8881/testIE",
+      url: "http://192.168.0.105:8881/testChrome",
       validResponseCodes: '200',
       validResponseContent: '"msg":"success"')
    return response
