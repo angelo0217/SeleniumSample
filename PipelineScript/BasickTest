@@ -48,18 +48,18 @@ node {
    		remote.password = password
    		stage('shutdown docker'){
    		    try {
-   			    sshCommand remote: remote, command: 'docker stop basic && docker rm basic && docker rmi demo/basic && cd /opt/vms/ && rm -rf *';
+   			    sshCommand remote: remote, command: 'docker stop web && docker rm web && docker rmi demo/web && cd /opt/vms/ && rm -rf *';
    			}catch (exc) {
                    echo 'shutdown docker error'
-               }
+             }
    		}
    		stage('move jar'){
                //sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
-   			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPL/Sp2DemoPrj/target/basic-1.0-SNAPSHOT.jar', into: '/opt/vms'
-   			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPL/Sp2DemoPrj/doc/Dockerfile', into: '/opt/vms'
+   			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
+   			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
    		}
    		stage('build docker'){
-   			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="demo/basic" . && docker run -itd -v /opt/vms/log:/workspace/logs --name basic -d -p 12345:8080 demo/basic'
+   			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="demo/web" . && docker run -itd -v /opt/vms/log:/workspace/logs --name web -d -p 12345:8080 demo/web'
    		}
     }
 }
