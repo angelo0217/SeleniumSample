@@ -1,4 +1,4 @@
-
+pipeline {
     def changeAlias() {
     def command = """{
         \"serverIp\" : \"${serverIp}\",
@@ -16,9 +16,10 @@
       validResponseContent: '"msg":"success"')
    return response
     }
-node {
-    stage('Say hello'){
-       cleanWs()
-       changeAlias()
-   }
+    node {
+        stage('Say hello'){
+           cleanWs()
+           changeAlias()
+       }
+    }
 }
