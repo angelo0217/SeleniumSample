@@ -10,6 +10,7 @@
     response = httpRequest (consoleLogResponseBody: true,
       contentType: 'APPLICATION_JSON',
       httpMode: 'POST',
+      connectionTimeout: 60,
       requestBody: command,
       url: "http://192.168.0.105:8881/testIE",
       validResponseCodes: '200',
