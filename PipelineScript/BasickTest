@@ -26,6 +26,7 @@ node {
         testBasic()
     }
     stage('git clone'){
+        cleanWs()
    		withCredentials([usernamePassword(credentialsId: 'deanGitLink', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
    		    withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']) {
    		        sh 'echo ${GIT_USERNAME}'
