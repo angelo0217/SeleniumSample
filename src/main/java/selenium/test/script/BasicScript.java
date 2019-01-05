@@ -29,13 +29,16 @@ public class BasicScript {
         if (driver != null) {
             try {
                 //要登入才能做事，無可避免
+                System.out.println("=============1");
                 if (doLogin(driver, request.getServerIp())) {
+                    System.out.println("=============1");
                     testStepVo.setDoLogin("true");
 
                     String[] acts = request.getRange().split(",");
 
                     //判斷步驟，執行需要跑的測試
                     for (String act : acts) {
+                        System.out.println("=============1"+act);
                         if (act.trim().equals("chk")) {
                             testStepVo.setChkField(doChkHidden(driver) + "");
                         } else if (act.trim().equals("insert")) {
@@ -65,21 +68,23 @@ public class BasicScript {
 
     public boolean doLogin(WebDriver driver, String serverIp) throws Exception {
         driver.get("http://" + serverIp + ":8080/login");
+//        driver.navigate().refresh("http://" + serverIp + ":8080/login");
         WebElement element = driver.findElement(By.id("username1"));
         element.sendKeys("admin");
 
-        element = driver.findElement(By.id("password1"));
-        element.sendKeys("12345");
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("$('#password1').val('12345');");
 
-        element = ((RemoteWebDriver) driver).findElementById("testBtn");
+        js.executeScript("$('#testBtn').click();");
+//        driver.navigate().to("javascript:document.getElementById('testBtn').click()");
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-
+        System.out.println("===========2");
         return TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/helloJsp", 20);
     }
 
     public boolean doChkHidden(WebDriver driver) throws Exception {
         WebElement element = ((RemoteWebDriver) driver).findElementById("helloText");
+        System.out.println(element.getText());
         return TimeDelayUtil.chkText(element, "helloJsp", 5);
     }
 

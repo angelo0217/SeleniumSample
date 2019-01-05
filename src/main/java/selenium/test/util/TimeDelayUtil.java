@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
  */
 public class TimeDelayUtil {
     public static boolean chkUrl(WebDriver driver, String after, int times) throws Exception{
+        System.out.println(driver.getCurrentUrl());
         int cnt = 0;
         //登入緩衝
         while (cnt < times && !driver.getCurrentUrl().equals(after)) {
