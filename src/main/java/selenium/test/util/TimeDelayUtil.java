@@ -12,6 +12,14 @@ import org.openqa.selenium.WebElement;
  * @since 1.0
  */
 public class TimeDelayUtil {
+    /**
+     * 檢查導頁，因為導頁多少有延遲，故加上傳入秒數
+     * @param driver
+     * @param after
+     * @param times
+     * @return
+     * @throws Exception
+     */
     public static boolean chkUrl(WebDriver driver, String after, int times) throws Exception{
         System.out.println(driver.getCurrentUrl());
         int cnt = 0;
@@ -25,6 +33,15 @@ public class TimeDelayUtil {
         }
         return false;
     }
+
+    /**
+     * 檢查欄位Text，加上傳入秒數是預防可能是執行特定動作有延遲
+     * @param element
+     * @param after
+     * @param times
+     * @return
+     * @throws Exception
+     */
     public static boolean chkText(WebElement element, String after, int times) throws Exception{
         int cnt = 0;
         while (cnt < times && !element.getText().equals(after)) {
@@ -36,6 +53,14 @@ public class TimeDelayUtil {
         }
         return false;
     }
+    /**
+     * 檢查欄位Value，加上傳入秒數是預防可能是執行特定動作有延遲
+     * @param element
+     * @param after
+     * @param times
+     * @return
+     * @throws Exception
+     */
     public static boolean chkValue(WebElement element, String after, int times, boolean empty) throws Exception{
         int cnt = 0;
 
