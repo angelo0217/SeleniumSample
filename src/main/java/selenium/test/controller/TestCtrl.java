@@ -23,12 +23,16 @@ public class TestCtrl {
     TestService testService;
 
     @PostMapping("testChrome")
-    public Response<TestStepVo> testChrome(@RequestBody Request request) throws Exception{
+    public Response<TestStepVo> testChrome(@RequestBody Request request){
         return testService.chromeTest(request);
     }
     @PostMapping("testIE")
-    public Response<TestStepVo> testIe(@RequestBody Request request) throws Exception{
+    public Response<TestStepVo> testIe(@RequestBody Request request){
         return testService.ieTest(request);
+    }
+    @PostMapping("testAll")
+    public Response<TestStepVo> testAll(@RequestBody Request request){
+        return testService.allTest(request);
     }
     @PostMapping("testError")
     public Response testError() throws Exception{

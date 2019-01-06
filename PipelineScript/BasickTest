@@ -3,15 +3,15 @@ def remote = [:]
 	remote.host = "${dockerIp}"
 	remote.allowAnyHosts = true
 
-def testBasic(inUrl, data) {
+def testBasic(inUrl, reqData, validResStr) {
     response = httpRequest (consoleLogResponseBody: true,
     contentType: 'APPLICATION_JSON',
     httpMode: 'POST',
     connectionTimeout: 60,
-    requestBody: "${data}",
+    requestBody: "${reqData}",
     url: "${inUrl}",
     validResponseCodes: '200',
-    validResponseContent: '"msg":"success"')
+    validResponseContent: '${validResStr}')
     return response
 }
 node {
@@ -21,7 +21,7 @@ node {
                                         \"range\":\"${range}\",
                                         \"name\":\"${name}\",
                                         \"age\":${age}
-                                    }""")
+                                    }""", '"msg":"success"')
     }
     stage('git clone'){
         cleanWs()

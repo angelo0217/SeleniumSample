@@ -23,54 +23,50 @@ import selenium.test.vo.TestStepVo;
 public class BasicScript {
     /**
      * 腳本入口
+     *
      * @param driver
      * @param request
      * @return
      * @throws Exception
      */
-    public Response<TestStepVo> script(WebDriver driver, Request request) throws Exception {
+    public TestStepVo script(WebDriver driver, Request request) throws Exception {
         TestStepVo testStepVo = new TestStepVo();
         testStepVo.setActs(request.getRange());
 
-        if (driver != null) {
-            try {
-                //要登入才能做事，無可避免
-                if (doLogin(driver, request.getServerIp())) {
-                    testStepVo.setDoLogin("true");
+        try {
+            //要登入才能做事，無可避免
+            if (doLogin(driver, request.getServerIp())) {
+                testStepVo.setDoLogin("true");
 
-                    String[] acts = request.getRange().split(",");
+                String[] acts = request.getRange().split(",");
 
-                    //判斷步驟，執行需要跑的測試
-                    for (String act : acts) {
-                        if (act.trim().equals("chk")) {
-                            testStepVo.setChkField(doChkHidden(driver) + "");
-                        } else if (act.trim().equals("insert")) {
-                            testStepVo.setDoInsert(doInsert(driver, request)+ "");
-                        } else if (act.trim().equals("query")) {
-                            testStepVo.setDoQuery(doQuery(driver, request.getServerIp())+ "");
-                        }
+                //判斷步驟，執行需要跑的測試
+                for (String act : acts) {
+                    if (act.trim().equals("chk")) {
+                        testStepVo.setChkField(doChkHidden(driver) + "");
+                    } else if (act.trim().equals("insert")) {
+                        testStepVo.setDoInsert(doInsert(driver, request) + "");
+                    } else if (act.trim().equals("query")) {
+                        testStepVo.setDoQuery(doQuery(driver, request.getServerIp()) + "");
                     }
-                    Thread.sleep(3000);
-                    return new Response(0, "success" , testStepVo);
-                }else{
-                    return new Response(-1, "login fail" , testStepVo);
                 }
+                Thread.sleep(3000);
 
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new Response(99, "Exception :" + e.getMessage());
-            } finally {
-                driver.quit();
+            } else {
+                testStepVo.setDoLogin("login fail");
             }
-        } else {
-            return new Response(-2, "Driver is null");
-        }
 
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            driver.quit();
+        }
+        return testStepVo;
     }
 
     /**
      * 登入腳本-default
+     *
      * @param driver
      * @param serverIp
      * @return
@@ -90,21 +86,23 @@ public class BasicScript {
 
     /**
      * 登入後檢查第一頁資訊 - chk
+     *
      * @param driver
      * @return
      * @throws Exception
      */
     public String doChkHidden(WebDriver driver) throws Exception {
         WebElement element = ((RemoteWebDriver) driver).findElementById("helloText");
-        if(TimeDelayUtil.chkText(element, "helloJsp", 5)){
+        if (TimeDelayUtil.chkText(element, "helloJsp", 5)) {
             return "success";
-        }else{
+        } else {
             return "chk text error";
         }
     }
 
     /**
      * 新增資料腳本 - insert
+     *
      * @param driver
      * @param request
      * @return
@@ -112,7 +110,7 @@ public class BasicScript {
      */
     public String doInsert(WebDriver driver, Request request) throws Exception {
         driver.get("http://" + request.getServerIp() + ":8080/com/helloJsp");
-        if(TimeDelayUtil.chkUrl(driver, "http://" + request.getServerIp() + ":8080/com/helloJsp", 20)) {
+        if (TimeDelayUtil.chkUrl(driver, "http://" + request.getServerIp() + ":8080/com/helloJsp", 20)) {
 
             WebElement element = ((RemoteWebDriver) driver).findElementById("name");
             element.sendKeys(request.getName());
@@ -130,6 +128,7 @@ public class BasicScript {
 
     /**
      * 查詢資料腳本 - query
+     *
      * @param driver
      * @param serverIp
      * @return
@@ -137,7 +136,7 @@ public class BasicScript {
      */
     public String doQuery(WebDriver driver, String serverIp) throws Exception {
         driver.get("http://" + serverIp + ":8080/com/queryPage");
-        if(TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/queryPage", 10)){
+        if (TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/queryPage", 10)) {
             WebElement element = ((RemoteWebDriver) driver).findElementById("queryBtn");
 
             ((JavascriptExecutor) driver).executeScript("return arguments[0].click();", element);
@@ -151,15 +150,16 @@ public class BasicScript {
 
     /**
      * 最後檢查隱藏欄位是否被塞入成功
+     *
      * @param driver
      * @return
      * @throws Exception
      */
     private String chkCommonHidden(WebDriver driver) throws Exception {
         WebElement element = ((RemoteWebDriver) driver).findElementById("chkField");
-        if(TimeDelayUtil.chkValue(element, "ok", 5, false)){
+        if (TimeDelayUtil.chkValue(element, "ok", 5, false)) {
             return "success";
-        }else{
+        } else {
             return element.getAttribute("value");
         }
     }
