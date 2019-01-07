@@ -16,12 +16,14 @@ def testBasic(inUrl, reqData, validResStr) {
 }
 node {
     stage('TestWeb'){
-        testBasic("${testUrl}", """{
-                                        \"serverIp\" : \"${serverIp}\",
-                                        \"range\":\"${range}\",
-                                        \"name\":\"${name}\",
-                                        \"age\":${age}
-                                    }""", "\"msg\":\"success\"")
+        testBasic("${testUrl}",
+                  """{
+                    \"serverIp\" : \"${serverIp}\",
+                    \"range\":\"${range}\",
+                    \"name\":\"${name}\",
+                    \"age\":${age}
+                  }""",
+                  "\"msg\":\"success\"")
     }
     stage('git clone'){
         cleanWs()
@@ -29,6 +31,7 @@ node {
    		    withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']) {
    		        sh 'echo ${GIT_USERNAME}'
    			    sh 'git clone --single-branch --branch master https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/angelo0217/Springboot2Demo.git'
+   			    //sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
    		        }
    		    }
         }
@@ -42,7 +45,7 @@ node {
    		}
       }
 
-       withCredentials([usernamePassword(credentialsId: 'MainMachine', passwordVariable: 'password', usernameVariable: 'user')]) {
+    withCredentials([usernamePassword(credentialsId: 'MainMachine', passwordVariable: 'password', usernameVariable: 'user')]) {
    		remote.user = user
    		remote.password = password
    		stage('shutdown docker'){
@@ -58,7 +61,8 @@ node {
    			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
    		}
    		stage('build docker'){
-   			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="demo/web" . && docker run -itd -v /opt/vms/log:/workspace/logs --name web -d -p 12345:8080 demo/web'
+   			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="demo/web" .'
+   			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name web -d -p 12345:8080 demo/web'
    		}
     }
 }

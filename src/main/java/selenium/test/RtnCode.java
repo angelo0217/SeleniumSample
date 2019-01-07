@@ -9,5 +9,6 @@ package selenium.test;
  */
 public class RtnCode {
     public static final int SUCCESS = 0;
+    public static final int NOT_GET_ELEMENT_ERROR = 90;
     public static final int SYSTEM_ERROR = 99;
 }

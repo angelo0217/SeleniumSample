@@ -1,12 +1,15 @@
 package selenium.test.script;
 
-import org.eclipse.jetty.util.StringUtil;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Component;
+import selenium.test.RtnCode;
+import selenium.test.exception.SysException;
 import selenium.test.util.TimeDelayUtil;
 import selenium.test.vo.Request;
-import selenium.test.vo.Response;
 import selenium.test.vo.TestStepVo;
 
 /**
@@ -77,7 +80,6 @@ public class BasicScript {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("$('#password1').val('12345');");
         js.executeScript("$('#testBtn').click();");
-
         return TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/helloJsp", 20);
     }
 
@@ -109,16 +111,20 @@ public class BasicScript {
         driver.get("http://" + request.getServerIp() + ":8080/com/helloJsp");
         if (TimeDelayUtil.chkUrl(driver, "http://" + request.getServerIp() + ":8080/com/helloJsp", 20)) {
 
-            WebElement element = ((RemoteWebDriver) driver).findElementById("name");
-            element.sendKeys(request.getName());
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("$('#name').val('"+request.getName()+"');");
+            js.executeScript("$('#age').val('"+request.getAge()+"');");
+            js.executeScript("$('#insertBtn').click();");
 
-            element = ((RemoteWebDriver) driver).findElementById("age");
-            element.sendKeys(request.getAge() + "");
-
-            element = driver.findElement(By.id("insertBtn"));
-            ((JavascriptExecutor) driver).executeScript("return arguments[0].click();", element);
-
-            return chkCommonHidden(driver);
+//            WebElement element = ((RemoteWebDriver) driver).findElementById("name");
+//            element.sendKeys(request.getName());
+//
+//            element = ((RemoteWebDriver) driver).findElementById("age");
+//            element.sendKeys(request.getAge() + "");
+//
+//            element = driver.findElement(By.id("insertBtn"));
+//            ((JavascriptExecutor) driver).executeScript("return arguments[0].click();", element);
+            return TimeDelayUtil.chkCommonHidden(driver, "chkField", 5);
         }
         return "redirect error";
     }
@@ -134,36 +140,11 @@ public class BasicScript {
     public String doQuery(WebDriver driver, String serverIp) throws Exception {
         driver.get("http://" + serverIp + ":8080/com/queryPage");
         if (TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/queryPage", 10)) {
-            WebElement element = ((RemoteWebDriver) driver).findElementById("queryBtn");
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("$('#queryBtn').click();");
 
-            ((JavascriptExecutor) driver).executeScript("return arguments[0].click();", element);
-
-            element = ((RemoteWebDriver) driver).findElementById("chkField");
-
-            return chkCommonHidden(driver);
+            return TimeDelayUtil.chkCommonHidden(driver, "chkField", 5);
         }
         return "redirect error";
-    }
-
-    /**
-     * 最後檢查隱藏欄位是否被塞入成功
-     *
-     * @param driver
-     * @return
-     * @throws Exception
-     */
-    private String chkCommonHidden(WebDriver driver) throws Exception {
-        try {
-            Alert alertf = driver.switchTo().alert();
-            alertf.dismiss();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        WebElement element = ((RemoteWebDriver) driver).findElementById("chkField");
-        if (TimeDelayUtil.chkValue(element, "ok", 5, false)) {
-            return "success";
-        } else {
-            return element.getAttribute("value");
-        }
     }
 }

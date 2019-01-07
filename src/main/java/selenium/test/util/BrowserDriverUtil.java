@@ -19,8 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class BrowserDriverUtil {
     public static WebDriver getChromeDriver() throws Exception {
         ChromeDriverManager.getInstance().setup();
-        WebDriver driver;
-        driver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
         return driver;
     }

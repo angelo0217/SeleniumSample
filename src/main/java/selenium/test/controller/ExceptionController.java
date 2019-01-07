@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import selenium.test.RtnCode;
+import selenium.test.exception.SysException;
 import selenium.test.vo.Response;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,12 @@ public class ExceptionController {
 
     @ExceptionHandler(value = Exception.class)
     public Response exCenter(HttpServletRequest req, Exception ex) {
-        ex.printStackTrace();
-        return new Response(RtnCode.SYSTEM_ERROR, "系統錯誤 : "+ ex.getMessage());
+        if(ex instanceof SysException){
+            SysException sex = (SysException) ex;
+            return new Response(sex.getCode(), sex.getMsg());
+        }else {
+            ex.printStackTrace();
+            return new Response(RtnCode.SYSTEM_ERROR, "系統錯誤 : " + ex.getMessage());
+        }
     }
 }
