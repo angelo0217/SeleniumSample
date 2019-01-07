@@ -11,7 +11,7 @@ def testBasic(inUrl, reqData, validResStr) {
     requestBody: "${reqData}",
     url: "${inUrl}",
     validResponseCodes: '200',
-    validResponseContent: ${validResStr})
+    validResponseContent: "${validResStr}")
     return response
 }
 node {

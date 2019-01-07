@@ -1,10 +1,7 @@
 package selenium.test.script;
 
 import org.eclipse.jetty.util.StringUtil;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Component;
 import selenium.test.util.TimeDelayUtil;
@@ -156,6 +153,12 @@ public class BasicScript {
      * @throws Exception
      */
     private String chkCommonHidden(WebDriver driver) throws Exception {
+        try {
+            Alert alertf = driver.switchTo().alert();
+            alertf.dismiss();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         WebElement element = ((RemoteWebDriver) driver).findElementById("chkField");
         if (TimeDelayUtil.chkValue(element, "ok", 5, false)) {
             return "success";
