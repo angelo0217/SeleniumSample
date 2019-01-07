@@ -10,6 +10,8 @@ import selenium.test.vo.Request;
 import selenium.test.vo.Response;
 import selenium.test.vo.TestStepVo;
 
+import java.util.Map;
+
 /**
  * Created on 2019/1/2
  *
@@ -23,15 +25,15 @@ public class TestCtrl {
     TestService testService;
 
     @PostMapping("testChrome")
-    public Response<TestStepVo> testChrome(@RequestBody Request request){
+    public Response<TestStepVo> testChrome(@RequestBody Request request) throws Exception{
         return testService.chromeTest(request);
     }
     @PostMapping("testIE")
-    public Response<TestStepVo> testIe(@RequestBody Request request){
+    public Response<TestStepVo> testIe(@RequestBody Request request) throws Exception{
         return testService.ieTest(request);
     }
     @PostMapping("testAll")
-    public Response<TestStepVo> testAll(@RequestBody Request request){
+    public Response<Map<String, TestStepVo>> testAll(@RequestBody Request request) throws Exception {
         return testService.allTest(request);
     }
     @PostMapping("testError")

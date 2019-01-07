@@ -14,9 +14,9 @@ import java.util.Map;
  * @since 1.0
  */
 public interface TestService {
-    public Response<TestStepVo> chromeTest(Request request);
+    public Response<TestStepVo> chromeTest(Request request) throws Exception;
 
-    public Response<TestStepVo> ieTest(Request request);
+    public Response<TestStepVo> ieTest(Request request) throws Exception;
 
-    public Response allTest(Request request);
+    public Response<Map<String, TestStepVo>> allTest(Request request) throws Exception;
 }

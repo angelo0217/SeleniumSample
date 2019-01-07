@@ -27,49 +27,22 @@ public class TestServiceImpl implements TestService {
     BasicScript basicScript;
 
     @Override
-    public Response<TestStepVo> chromeTest(Request request){
-        try {
-            WebDriver driver = null;
-            try {
-                driver = BrowserDriverUtil.getChromeDriver();
-            } catch (Exception e) {
-                return new Response(-1, "Chrome Driver error");
-            }
-            if (driver == null) return new Response(-2, "Chrome Driver is null");
-            return new Response(0, "success", basicScript.script(driver, request));
-        } catch (Exception ex) {
-            return new Response(99, "Chrome Exception :" + ex.getMessage());
-        }
+    public Response<TestStepVo> chromeTest(Request request) throws Exception {
+        WebDriver driver = BrowserDriverUtil.getChromeDriver();
+        return new Response(0, "success", basicScript.script(driver, request));
     }
 
     @Override
-    public Response<TestStepVo> ieTest(Request request){
-        try {
-            WebDriver driver = null;
-            try {
-                driver = BrowserDriverUtil.getIEDriver();
-            } catch (Exception e) {
-                return new Response(-1, "IE Driver error");
-            }
-            if (driver == null) return new Response(-2, "IE Driver is null");
-            return new Response(0, "success", basicScript.script(driver, request));
-        } catch (Exception ex) {
-            return new Response(99, "IE Exception :" + ex.getMessage());
-        }
+    public Response<TestStepVo> ieTest(Request request) throws Exception {
+        WebDriver driver = BrowserDriverUtil.getIEDriver();
+        return new Response(0, "success", basicScript.script(driver, request));
     }
 
     @Override
-    public Response allTest(Request request) {
-        Map<String, Object> map = new HashMap();
-
-        Response chrome = chromeTest(request);
-        if(chrome.getCode() != 0) return chrome;
-
-        Response ie = ieTest(request);
-        if(ie.getCode() != 0) return ie;
-
-        map.put("chrome", chrome);
-        map.put("ie", ie);
+    public Response<Map<String, TestStepVo>> allTest(Request request) throws Exception {
+        Map<String, TestStepVo> map = new HashMap();
+        map.put("chrome", basicScript.script(BrowserDriverUtil.getChromeDriver(), request));
+        map.put("ie", basicScript.script(BrowserDriverUtil.getIEDriver(), request));
         return new Response(0, "success", map);
     }
 }
