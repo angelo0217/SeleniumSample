@@ -38,6 +38,7 @@ public class BrowserDriverUtil {
         ieCapabilities.setJavascriptEnabled(true);
 
         WebDriver driver = new InternetExplorerDriver(ieCapabilities);
+        driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
         return driver;
     }
 }
