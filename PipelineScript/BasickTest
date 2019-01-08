@@ -4,16 +4,25 @@ def remote = [:]
 	remote.allowAnyHosts = true
 
 def testBasic(inUrl, reqData, validResStr) {
-    response = httpRequest (consoleLogResponseBody: true,
-    contentType: 'APPLICATION_JSON',
-    httpMode: 'POST',
-    connectionTimeout: 120,
-    requestBody: "${reqData}",
-    url: "${inUrl}",
-    validResponseCodes: '200',
-    validResponseContent: "${validResStr}")
-    return response
-}
+     response = httpRequest (consoleLogResponseBody: true,
+     contentType: 'APPLICATION_JSON',
+     httpMode: 'POST',
+     connectionTimeout: 120,
+     requestBody: "${reqData}",
+     url: "${inUrl}",
+     validResponseCodes: '200',
+     validResponseContent: "${validResStr}")
+     return response
+ }
+ def testlogin() {
+     response = httpRequest (
+     consoleLogResponseBody: true,
+     httpMode: 'GET',
+     connectionTimeout: 120,
+     url: "http://${webIpPort}/login",
+     validResponseCodes: '200')
+     return response
+ }
 node {
     stage('git clone'){
         cleanWs()
@@ -52,12 +61,19 @@ node {
        			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
        			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
-       			sshCommand remote: remote, command: "docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb && sleep ${deploySeconds}"
+       			sshCommand remote: remote, command: "docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb"
        		}
 
         }
 
     stage('TestWeb'){
+        try{
+            testlogin()
+        }catch(exc){
+            steps {
+                        echo "TestWeb"
+            }
+        }
         testBasic("${testUrl}",
                   """{
                     \"serverIp\" : \"${webIpPort}\",
