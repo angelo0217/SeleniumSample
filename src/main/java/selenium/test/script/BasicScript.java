@@ -73,14 +73,14 @@ public class BasicScript {
      * @throws Exception
      */
     public boolean doLogin(WebDriver driver, String serverIp) throws Exception {
-        driver.get("http://" + serverIp + ":8080/login");
+        driver.get("http://" + serverIp + "/login");
         WebElement element = driver.findElement(By.id("username1"));
         element.sendKeys("admin");
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("$('#password1').val('12345');");
         js.executeScript("$('#testBtn').click();");
-        return TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/helloJsp", 20);
+        return TimeDelayUtil.chkUrl(driver, "http://" + serverIp + "/com/helloJsp", 20);
     }
 
     /**
@@ -108,8 +108,8 @@ public class BasicScript {
      * @throws Exception
      */
     public String doInsert(WebDriver driver, Request request) throws Exception {
-        driver.get("http://" + request.getServerIp() + ":8080/com/helloJsp");
-        if (TimeDelayUtil.chkUrl(driver, "http://" + request.getServerIp() + ":8080/com/helloJsp", 20)) {
+        driver.get("http://" + request.getServerIp() + "/com/helloJsp");
+        if (TimeDelayUtil.chkUrl(driver, "http://" + request.getServerIp() + "/com/helloJsp", 20)) {
 
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("$('#name').val('"+request.getName()+"');");
@@ -138,8 +138,8 @@ public class BasicScript {
      * @throws Exception
      */
     public String doQuery(WebDriver driver, String serverIp) throws Exception {
-        driver.get("http://" + serverIp + ":8080/com/queryPage");
-        if (TimeDelayUtil.chkUrl(driver, "http://" + serverIp + ":8080/com/queryPage", 10)) {
+        driver.get("http://" + serverIp + "/com/queryPage");
+        if (TimeDelayUtil.chkUrl(driver, "http://" + serverIp + "/com/queryPage", 10)) {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("$('#queryBtn').click();");
 
