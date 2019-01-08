@@ -40,7 +40,7 @@ node {
        		remote.password = password
        		stage('shutdown test docker'){
        		    try {
-       			    sshCommand remote: remote, command: 'docker stop testwebc && docker rm testwebc && docker rmi testweb && cd /opt/vms/ && rm -rf *';
+       			    sshCommand remote: remote, command: 'docker stop testcontainer && docker rm testcontainer && docker rmi testweb && cd /opt/vms/ && rm -rf *';
        			}catch (exc) {
                        echo 'shutdown docker error'
                  }
@@ -50,10 +50,11 @@ node {
        			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
        			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
-       			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" . &&　docker run -itd -v /opt/vms/log:/workspace/logs --name testwebc -d -p 11111:8080 testweb'
+       			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
+       			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb'
 
        			try {
-                    sshCommand remote: remote, command: 'docker stop testwebc && docker rm testwebc && docker rmi testweb';
+                    sshCommand remote: remote, command: 'docker stop testcontainer && docker rm testcontainer && docker rmi testweb';
                 }catch (exc) {
                     echo 'shutdown docker error'
                 }
