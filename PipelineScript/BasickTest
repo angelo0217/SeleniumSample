@@ -7,7 +7,7 @@ def testBasic(inUrl, reqData, validResStr) {
     response = httpRequest (consoleLogResponseBody: true,
     contentType: 'APPLICATION_JSON',
     httpMode: 'POST',
-    connectionTimeout: 60,
+    connectionTimeout: 120,
     requestBody: "${reqData}",
     url: "${inUrl}",
     validResponseCodes: '200',
