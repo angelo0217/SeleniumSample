@@ -20,7 +20,7 @@ public class BrowserDriverUtil {
     public static WebDriver getChromeDriver() throws Exception {
         ChromeDriverManager.getInstance().setup();
         WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         return driver;
     }
 
@@ -38,7 +38,7 @@ public class BrowserDriverUtil {
         ieCapabilities.setJavascriptEnabled(true);
 
         WebDriver driver = new InternetExplorerDriver(ieCapabilities);
-        driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         return driver;
     }
 }
