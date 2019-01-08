@@ -52,13 +52,7 @@ node {
        			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
        			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
-       			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb && sleep 20'
-
-       			try {
-                    sshCommand remote: remote, command: 'docker stop testcontainer && docker rm testcontainer && docker rmi testweb';
-                }catch (exc) {
-                    echo 'shutdown docker error'
-                }
+       			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb && sleep ${deploySeconds}'
        		}
 
         }
@@ -79,6 +73,11 @@ node {
    		remote.user = user
    		remote.password = password
    		stage('shutdown prod docker'){
+   		    try {
+                sshCommand remote: remote, command: 'docker stop testcontainer && docker rm testcontainer && docker rmi testweb';
+            }catch (exc) {
+             echo 'shutdown docker error'
+            }
    		    try {
    			    sshCommand remote: remote, command: 'docker stop web && docker rm web && docker rmi demo/web';
    			}catch (exc) {
