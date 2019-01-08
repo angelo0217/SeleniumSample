@@ -62,6 +62,8 @@ node {
 
        			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
        			sshCommand remote: remote, command: "docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb"
+       			sshCommand remote: remote, command: "sleep ${deploySeconds}"
+
        		}
 
         }
@@ -70,9 +72,6 @@ node {
         try{
             testlogin()
         }catch(exc){
-            steps {
-                        echo "TestWeb"
-            }
         }
         testBasic("${testUrl}",
                   """{
