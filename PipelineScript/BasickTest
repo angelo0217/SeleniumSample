@@ -52,7 +52,7 @@ node {
        			sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
        			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
-       			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb && sleep ${deploySeconds}'
+       			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb && sleep "${deploySeconds}"'
        		}
 
         }
