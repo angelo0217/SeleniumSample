@@ -79,8 +79,6 @@ node {
 						\"age\":13
 					  }""",
 					  "\"msg\":\"success\"")
-			   		    try {
-
 
 			//關閉測試環境
             try {
