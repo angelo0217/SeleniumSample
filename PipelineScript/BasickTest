@@ -4,25 +4,25 @@ def remote = [:]
 	remote.allowAnyHosts = true
 
 def testBasic(inUrl, reqData, validResStr) {
-     response = httpRequest (consoleLogResponseBody: true,
-     contentType: 'APPLICATION_JSON',
-     httpMode: 'POST',
-     connectionTimeout: 120,
-     requestBody: "${reqData}",
-     url: "${inUrl}",
-     validResponseCodes: '200',
-     validResponseContent: "${validResStr}")
-     return response
+    response = httpRequest (consoleLogResponseBody: true,
+    contentType: 'APPLICATION_JSON',
+    httpMode: 'POST',
+    connectionTimeout: 120,
+    requestBody: "${reqData}",
+    url: "${inUrl}",
+    validResponseCodes: '200',
+    validResponseContent: "${validResStr}")
+    return response
  }
- def testlogin() {
-     response = httpRequest (
-     consoleLogResponseBody: true,
-     httpMode: 'GET',
-     connectionTimeout: 120,
-     url: "http://${webIpPort}/login",
-     validResponseCodes: '200')
-     return response
- }
+def testlogin() {
+    response = httpRequest (
+    consoleLogResponseBody: true,
+    httpMode: 'GET',
+    connectionTimeout: 120,
+    url: "http://${webIpPort}/login",
+    validResponseCodes: '200')
+    return response
+}
 node {
     stage('git clone'){
         cleanWs()
@@ -55,43 +55,42 @@ node {
             sshCommand remote: remote, command: 'cd /opt/vms/ && rm -rf *';
        	}
        	stage('build test docker'){
-			//sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
        		sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
        		sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
        		sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
        		sshCommand remote: remote, command: "docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb"
+			//預計等待web啟動時間
        		sshCommand remote: remote, command: "sleep ${deploySeconds}"
-
        	}
+		stage('TestWeb'){
+			//測試首頁是否啟動，失敗多等待10秒
+			try{
+				testlogin()
+			}catch(exc){
+				sshCommand remote: remote, command: "sleep 10"
+			}
+			//部屬web
+			testBasic("${testUrl}",
+					  """{
+						\"serverIp\" : \"${webIpPort}\",
+						\"range\":\"${range}\",
+						\"name\":\"Jenkins\",
+						\"age\":13
+					  }""",
+					  "\"msg\":\"success\"")
+			   		    try {
 
-    }
 
-    stage('TestWeb'){
-        try{
-            testlogin()
-        }catch(exc){
-        }
-        testBasic("${testUrl}",
-                  """{
-                    \"serverIp\" : \"${webIpPort}\",
-                    \"range\":\"${range}\",
-                    \"name\":\"Jenkins\",
-                    \"age\":13
-                  }""",
-                  "\"msg\":\"success\"")
-    }
-
-
-    withCredentials([usernamePassword(credentialsId: 'MainMachine', passwordVariable: 'password', usernameVariable: 'user')]) {
-   		remote.user = user
-   		remote.password = password
-   		stage('shutdown prod docker'){
-   		    try {
+			//關閉測試環境
+            try {
                 sshCommand remote: remote, command: 'docker stop testcontainer && docker rm testcontainer && docker rmi testweb';
             }catch (exc) {
 				echo 'shutdown docker error'
             }
+		}
+		stage('shutdown prod docker'){
+			//先將部屬環境關閉
    		    try {
    			    sshCommand remote: remote, command: 'docker stop web && docker rm web && docker rmi demo/web';
    			}catch (exc) {
@@ -100,9 +99,10 @@ node {
             sshCommand remote: remote, command: 'cd /opt/vms/ && rm -rf *';
    		}
    		stage('build prod docker'){
+			//正是部屬
    		    sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
             sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
-            //sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
+
    			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="demo/web" .'
    			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name web -d -p 12345:8080 demo/web'
    		}
