@@ -70,7 +70,7 @@ node {
 			}catch(exc){
 				sshCommand remote: remote, command: "sleep 10"
 			}
-			//部屬web
+			//測試Web
 			testBasic("${testUrl}",
 					  """{
 						\"serverIp\" : \"${webIpPort}\",

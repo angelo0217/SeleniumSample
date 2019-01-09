@@ -1,0 +1,41 @@
+def testApi(inUrl, reqData, validResStr) {
+    response = httpRequest (consoleLogResponseBody: true,
+    contentType: 'APPLICATION_JSON',
+    httpMode: 'POST',
+    connectionTimeout: 120,
+    requestBody: "${reqData}",
+    url: "${inUrl}",
+    validResponseCodes: '200',
+    validResponseContent: "${validResStr}")
+    return response
+ }
+node {
+    stage('testApi1'){
+		testApi(
+			"http://com.test/api1",
+			"""{
+				\"serverIp\" : \"${webIpPort}\",
+				\"range\":\"${range}\",
+				\"name\":\"Jenkins\",
+				\"age\":13
+				}""",
+			"\"msg\":\"success\""
+		)
+    }
+    stage('testApi2'){
+		try{
+			testApi(
+				"http://com.test/api2",
+				"""{
+					\"serverIp\" : \"${webIpPort}\",
+					\"range\":\"${range}\",
+					\"name\":\"Jenkins\",
+					\"age\":13
+					}""",
+				"\"msg\":\"success\""
+			)
+		}catch(err){
+			throw err
+		}
+    }
+}
