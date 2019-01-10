@@ -1,3 +1,4 @@
+def
 def testApi(inUrl, reqData, validResStr) {
     response = httpRequest (consoleLogResponseBody: true,
     contentType: 'APPLICATION_JSON',
