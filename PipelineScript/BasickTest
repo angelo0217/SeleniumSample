@@ -55,8 +55,8 @@ node {
             sshCommand remote: remote, command: 'cd /opt/vms/ && rm -rf *';
        	}
        	stage('build test docker'){
-       		sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
-       		sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
+       		sshPut remote: remote, from: '/var/jenkins_home/workspace/testAutoWebDepoly/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
+       		sshPut remote: remote, from: '/var/jenkins_home/workspace/testAutoWebDepoly/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
        		sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="testweb" .'
        		sshCommand remote: remote, command: "docker run -itd -v /opt/vms/log:/workspace/logs --name testcontainer -d -p 11111:8080 testweb"
@@ -98,8 +98,8 @@ node {
    		}
    		stage('build prod docker'){
 			//正是部屬
-   		    sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
-            sshPut remote: remote, from: '/var/jenkins_home/workspace/testPPLhttp/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
+   		    sshPut remote: remote, from: '/var/jenkins_home/workspace/testAutoWebDepoly/Springboot2Demo/target/demo-0.0.1-SNAPSHOT.war', into: '/opt/vms'
+            sshPut remote: remote, from: '/var/jenkins_home/workspace/testAutoWebDepoly/Springboot2Demo/doc/Dockerfile', into: '/opt/vms'
 
    			sshCommand remote: remote, command: 'cd /opt/vms/ && docker build -t="demo/web" .'
    			sshCommand remote: remote, command: 'docker run -itd -v /opt/vms/log:/workspace/logs --name web -d -p 12345:8080 demo/web'
