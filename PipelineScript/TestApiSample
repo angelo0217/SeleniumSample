@@ -36,7 +36,7 @@ node {
 				"\"msg\":\"success\""
 			)
 		}catch(err){
-			throw err
+			echo "error : ${err}"
 		}
     }
 }
