@@ -1,5 +1,8 @@
-def
+def header="\"header\":{\"client_id\":\"12345\"}"
+
 def testApi(inUrl, reqData, validResStr) {
+    echo "***************Start test url : ${inUrl}"
+    echo "${reqData}"
     response = httpRequest (consoleLogResponseBody: true,
     contentType: 'APPLICATION_JSON',
     httpMode: 'POST',
@@ -13,30 +16,35 @@ def testApi(inUrl, reqData, validResStr) {
 node {
     stage('testApi1'){
 		testApi(
-			"http://com.test/api1",
-			"""{
-				\"serverIp\" : \"${webIpPort}\",
-				\"range\":\"${range}\",
-				\"name\":\"Jenkins\",
-				\"age\":13
-				}""",
+			"http://${serverIpPort}/api1",
+			"""{${header},
+			\"body\":{\"name\":\"test01\"}
+			}""",
 			"\"msg\":\"success\""
 		)
     }
     stage('testApi2'){
+		testApi(
+			"http://${serverIpPort}/api1",
+			"""{${header},
+			\"body\":{\"name\":\"test01\"}
+			}""",
+			"\"name\":\"test01\""
+		)
+    }
+	stage('testApi3'){
 		try{
 			testApi(
-				"http://com.test/api2",
+				"http://${serverIpPort}/api2",
 				"""{
-					\"serverIp\" : \"${webIpPort}\",
-					\"range\":\"${range}\",
-					\"name\":\"Jenkins\",
-					\"age\":13
-					}""",
+				${header},
+				\"body\":{\"name\":\"test02\"}
+				}""",
 				"\"msg\":\"success\""
 			)
 		}catch(err){
-			echo "error : ${err}"
+			echo "${err}"
 		}
     }
+
 }
