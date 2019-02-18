@@ -40,5 +40,8 @@ public class TestCtrl {
     public Response testError() throws Exception{
         return new Response(-1, "test error");
     }
-
+    @PostMapping("testRest")
+    public Request testRest(@RequestBody Request request) throws Exception {
+        return request;
+    }
 }

@@ -29,7 +29,8 @@ node {
    		withCredentials([usernamePassword(credentialsId: 'deanGitLink', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
    		    withEnv(['PATH+EXTRA=/usr/sbin:/usr/bin:/sbin:/bin']) {
    		        sh 'echo ${GIT_USERNAME}'
-   			    sh 'git clone --single-branch --branch master https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/angelo0217/Springboot2Demo.git'
+   			    //sh 'git clone --single-branch --branch master https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/angelo0217/Springboot2Demo.git'
+   			    sh 'git clone --single-branch --branch master git://github.com/angelo0217/Springboot2Demo.git'
    			    //sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
    		    }
    		}
